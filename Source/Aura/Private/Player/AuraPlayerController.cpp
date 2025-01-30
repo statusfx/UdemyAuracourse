@@ -3,6 +3,9 @@
 #include "Player/AuraPlayerController.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
+#include "Engine/LocalPlayer.h"
+#include "GameFramework/Pawn.h"
+
 
 
 AAuraPlayerController::AAuraPlayerController()
