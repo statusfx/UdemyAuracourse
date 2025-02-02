@@ -4,14 +4,62 @@
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 #include "Engine/LocalPlayer.h"
+#include "Engine/World.h"
 #include "GameFramework/Pawn.h"
-
+#include "Interaction/EnemyInterface.h"
 
 
 AAuraPlayerController::AAuraPlayerController()
 {
 	bReplicates = true;
 	
+}
+
+void AAuraPlayerController::PlayerTick(float DeltaTime)
+{
+	Super::PlayerTick(DeltaTime);
+
+	CursorTrace();
+}
+inline void AAuraPlayerController::CursorTrace()
+{
+	FHitResult CursorHit;
+	GetHitResultUnderCursor(ECC_Visibility, false, CursorHit);
+
+	LastActor = ThisActor;
+	ThisActor = CursorHit.bBlockingHit ? CursorHit.GetActor() : nullptr;
+
+	// Handle different scenarios
+	if (LastActor == nullptr)
+	{
+		if (ThisActor != nullptr)
+		{
+			// Case B: Highlight the new actor
+			ThisActor->HighlightActor();
+		}
+		else
+		{
+			// Case A: Both are null, do nothing
+		}
+	}
+	else
+	{
+		if (ThisActor == nullptr)
+		{
+			// Case C: Unhighlight the last actor
+			LastActor->UnHighlightActor();
+		}
+		else if (LastActor != ThisActor)
+		{
+			// Case D: Unhighlight the last actor and highlight the new one
+			LastActor->UnHighlightActor();
+			ThisActor->HighlightActor();
+		}
+		else
+		{
+			// Case E: Both actors are valid and the same, do nothing
+		}
+	}
 }
 
 void AAuraPlayerController::BeginPlay()
