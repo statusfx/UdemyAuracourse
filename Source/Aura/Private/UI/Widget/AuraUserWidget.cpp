@@ -1,11 +1,11 @@
 // StatusFXGaming
 
 
-#include "UI/Widget/AureaUserWidget.h"
+#include "UI/Widget/AuraUserWidget.h"
 
 #include "UI/WidgetController/AuraWidgetController.h"
 
-void UAureaUserWidget::SetWidgetController(UObject* InWidgetController)
+void UAuraUserWidget::SetWidgetController(UObject* InWidgetController)
 {
 	WidgetController = InWidgetController;
 	WidgetControllerSet();

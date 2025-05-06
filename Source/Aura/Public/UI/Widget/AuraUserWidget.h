@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "AureaUserWidget.generated.h"
+#include "AuraUserWidget.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class AURA_API UAureaUserWidget : public UUserWidget
+class AURA_API UAuraUserWidget : public UUserWidget
 {
 	GENERATED_BODY()
 public:
