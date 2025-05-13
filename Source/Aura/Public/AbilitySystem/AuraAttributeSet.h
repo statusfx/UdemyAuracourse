@@ -20,15 +20,33 @@ struct FEffectProperties
 {
 	GENERATED_BODY()
 
-	FEffectProperties() {}
+	FEffectProperties(){}
 
 	FGameplayEffectContextHandle EffectContextHandle;
+	
 	UPROPERTY()
-	UAbilitySystemComponent* SourceASCAbilitySystemComponent;
-	
-	AActor*SourceCharacter;
+	UAbilitySystemComponent* SourceASC = nullptr;
 
-	
+	UPROPERTY()
+	AActor* SourceAvatarActor = nullptr;
+
+	UPROPERTY()
+	AController* SourceController = nullptr;
+
+	UPROPERTY()
+	ACharacter* SourceCharacter = nullptr;
+
+	UPROPERTY()
+		UAbilitySystemComponent* TargetASC = nullptr;
+
+	UPROPERTY()
+		AActor* TargetAvatarActor = nullptr;
+
+	UPROPERTY()
+		AController* TargetController = nullptr;
+
+	UPROPERTY()
+		ACharacter* TargetCharacter = nullptr;
 	
 	
 };
@@ -41,7 +59,7 @@ public:
 	UAuraAttributeSet();
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
-
+	void SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& Props) const;
 	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
 	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
 	
@@ -79,5 +97,7 @@ private:
 
 	float PreviousMana = 0.f;
 	float PreviousMaxMana = 0.f;
+
+
 
 };

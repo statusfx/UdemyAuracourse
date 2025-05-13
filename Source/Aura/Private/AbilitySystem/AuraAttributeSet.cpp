@@ -8,8 +8,6 @@
 #include "GameplayEffectExtension.h"
 #include "GameFramework/Character.h"
 
-class FGameplayEffectModCallbackData;
-
 UAuraAttributeSet::UAuraAttributeSet()
 {
 	Health = 50.f;
@@ -31,50 +29,61 @@ void UAuraAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, MaxMana, COND_None, REPNOTIFY_Always);
 }
 
-/*void UAuraAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
+void UAuraAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
 {
+	//TODO: Move this at some point to the post Gameplay Effect section. Waiting for intstructor to show best practices. 
 	Super::PreAttributeChange(Attribute, NewValue);
 	if (Attribute == GetHealthAttribute())
 	{
 		NewValue = FMath::Clamp(NewValue, 0.f, MaxHealth.GetCurrentValue());
-		UE_LOG(LogTemp,Warning, TEXT("Health: %f"), NewValue);
 	}
 	if (Attribute == GetManaAttribute())
 	{
 		NewValue = FMath::Clamp(NewValue, 0.f, MaxMana.GetCurrentValue());
-		UE_LOG(LogTemp,Warning, TEXT("Mana: %f"), NewValue);
 	}
 
 }
-*/
+
+void UAuraAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& Props) const
+{
+	// Source = Causer of the effect, Target = target of the effect (Owner of this AS)
+	
+	Props.EffectContextHandle = Data.EffectSpec.GetContext();
+	Props.SourceASC = Props.EffectContextHandle.GetOriginalInstigatorAbilitySystemComponent();
+
+	if (IsValid(Props.SourceASC) && Props.SourceASC->AbilityActorInfo.IsValid() && Props.SourceASC->AbilityActorInfo->AvatarActor.IsValid())
+	{
+		Props.SourceAvatarActor = Props.SourceASC->AbilityActorInfo->AvatarActor.Get();
+		Props.SourceController = Props.SourceController = Props.SourceASC->AbilityActorInfo->PlayerController.Get();
+		if (Props.SourceController == nullptr && Props.SourceAvatarActor != nullptr)
+		{
+			if (const APawn* Pawn = Cast<APawn>(Props.SourceAvatarActor))
+			{
+				Props.SourceController = Pawn->GetController();
+			}
+		}
+		if (Props.SourceController)
+		{
+			ACharacter* SourceCharacter = Cast<ACharacter>(Props.SourceController->GetPawn());
+		}
+	}
+	if (Data.Target.AbilityActorInfo.IsValid() && Data.Target.AbilityActorInfo->AvatarActor.IsValid())
+	{
+		Props.TargetAvatarActor = Data.Target.AbilityActorInfo->AvatarActor.Get();
+		Props.TargetController = Data.Target.AbilityActorInfo->PlayerController.Get();
+		Props.TargetCharacter =  Cast<ACharacter>(Props.TargetAvatarActor);
+		Props.TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Props.TargetAvatarActor);
+	}
+}
+
 void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
 {
 	Super::PostGameplayEffectExecute(Data);
 
-	const FGameplayEffectContextHandle EffectContextHandle = Data.EffectSpec.GetContext();
-	const UAbilitySystemComponent* SourceASC = EffectContextHandle.GetOriginalInstigatorAbilitySystemComponent();
+	FEffectProperties Props;
+	SetEffectProperties(Data, Props);
 
-	if (IsValid(SourceASC) && SourceASC->AbilityActorInfo.IsValid() && SourceASC->AbilityActorInfo->AvatarActor.IsValid())
-	{
-		AActor* SourceAvatarActor = SourceASC->AbilityActorInfo->AvatarActor.Get();
-		const AController* SourceController = SourceASC->AbilityActorInfo->PlayerController.Get();
-		if (SourceController == nullptr && SourceAvatarActor != nullptr)
-		{
-			if (const APawn* Pawn = Cast<APawn>(SourceAvatarActor))
-			{
-				SourceController = Pawn->GetController();
-			}
-		}
-		if (SourceController)
-		{
-				ACharacter* SourceCharacter = Cast<ACharacter>(SourceController->GetPawn());
-		}
-	}
-
-	AActor* TargetActor = Data.Target.AbilityActorInfo->AvatarActor.Get();
-	AController* TargetController = Data.Target.AbilityActorInfo->PlayerController.Get();
-	ACharacter* TargetCharacter = Cast<ACharacter>(TargetActor);
-	UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor);
+	
 }
 
 void UAuraAttributeSet::OnRep_Health()
@@ -124,3 +133,5 @@ void UAuraAttributeSet::OnRep_MaxMana()
 	// Update stored previous value
 	PreviousMaxMana = MaxMana.GetCurrentValue();
 }
+
+
