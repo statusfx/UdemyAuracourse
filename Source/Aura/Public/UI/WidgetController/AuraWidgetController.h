@@ -5,7 +5,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UObject/NoExportTypes.h"
 #include "AbilitySystemComponent.h"
 #include "AttributeSet.h" 
 #include "AuraWidgetController.generated.h"
@@ -21,13 +20,13 @@ struct FWidgetControllerParams
 
 	FWidgetControllerParams() {}
 	FWidgetControllerParams(APlayerController* PC, APlayerState* PS, UAbilitySystemComponent* ASC, UAttributeSet* AS)
-	: PlayerController(PC), Playerstate(PS), AbilitySystemComponent(ASC), AttributeSet(AS){}
+	: PlayerController(PC), PlayerState(PS), AbilitySystemComponent(ASC), AttributeSet(AS){}
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<APlayerController> PlayerController = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TObjectPtr<APlayerState> Playerstate = nullptr;
+	TObjectPtr<APlayerState> PlayerState = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent = nullptr;
@@ -45,15 +44,11 @@ class AURA_API UAuraWidgetController : public UObject
 {
 	GENERATED_BODY()
 public:
-	
-	void SetWidgetControllerParams(const FWidgetControllerParams& WCParams)
-	{
-		PlayerController = WCParams.PlayerController;
-		PlayerState = WCParams.Playerstate;
-		AbilitySystemComponent = WCParams.AbilitySystemComponent;
-		AttributeSet = WCParams.AttributeSet;
-	}
-	
+	UFUNCTION(BlueprintCallable)
+	void SetWidgetControllerParams(const FWidgetControllerParams& WCParams);
+	virtual void BroadcastInitialValues();
+	virtual void BindCallbacksToDependencies();
+
 protected:
 
 	UPROPERTY(BlueprintReadOnly, Category = "WidgetController")

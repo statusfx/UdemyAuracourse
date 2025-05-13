@@ -35,7 +35,7 @@ protected:
 private:
 
 	/** Widget class to use for the HUD overlay */
-	UPROPERTY(EditAnywhere, Category = "HUD")
+	UPROPERTY(EditAnywhere, Category = "AuraHUD")
 	TSubclassOf<UAuraUserWidget> OverlayWidgetClass;
 
 	UPROPERTY()

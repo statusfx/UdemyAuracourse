@@ -5,14 +5,33 @@
 #include "AbilitySystemComponent.h"
 #include "CoreMinimal.h"
 #include "AttributeSet.h"
-#include "Net/RepLayout.h"
+#include "Engine/Engine.h"
 #include "AuraAttributeSet.generated.h"
+
 
 #define ATTRIBUTE_ACCESSORS(ClassName, PropertyName) \
 	GAMEPLAYATTRIBUTE_PROPERTY_GETTER(ClassName, PropertyName) \
 	GAMEPLAYATTRIBUTE_VALUE_GETTER(PropertyName) \
 	GAMEPLAYATTRIBUTE_VALUE_SETTER(PropertyName) \
 	GAMEPLAYATTRIBUTE_VALUE_INITTER(PropertyName)
+
+USTRUCT()
+struct FEffectProperties
+{
+	GENERATED_BODY()
+
+	FEffectProperties() {}
+
+	FGameplayEffectContextHandle EffectContextHandle;
+	UPROPERTY()
+	UAbilitySystemComponent* SourceASCAbilitySystemComponent;
+	
+	AActor*SourceCharacter;
+
+	
+	
+	
+};
 
 UCLASS()
 class AURA_API UAuraAttributeSet : public UAttributeSet
@@ -22,6 +41,9 @@ public:
 	UAuraAttributeSet();
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
+	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
+	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
 	
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Health, Category = "Vital Attributes")
 	FGameplayAttributeData Health;
