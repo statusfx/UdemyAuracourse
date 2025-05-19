@@ -25,7 +25,7 @@ void AAuraCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
 
-	// init Ability Actor Ifo for the Server
+	// init Ability Actor Info for the Server
 	InitAbilityActorInfo();	
 }
 
@@ -53,4 +53,5 @@ void AAuraCharacter::InitAbilityActorInfo()
 			AuraHUD->InitOverlay(AuraPlayerController, AuraPlayerState, AbilitySystemComponent, AttributeSet);
 		}
 	}
+	InitializeDefaultAttributes();
 }
