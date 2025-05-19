@@ -9,9 +9,6 @@
 
 UAuraAttributeSet::UAuraAttributeSet()
 {
-	Health = 50.f;
-	Mana = 15.f;
-
 	UE_LOG(LogTemp, Warning, TEXT("AuraAttributeSet constructor ran"));
 }
 
