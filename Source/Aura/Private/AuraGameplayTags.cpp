@@ -53,27 +53,27 @@ FName( "Attributes.Secondary.CriticalHitChance")), FString(
 
 	GameplayTags.Attributes_Secondary_CriticalHitDamage = UGameplayTagsManager::Get().AddNativeGameplayTag(
 FName( "Attributes.Secondary.CriticalHitDamage")), FString(
-"Increases the Damage delt from a critical hit");
+"Increases the Damage from a critical hit");
 
 	GameplayTags.Attributes_Secondary_CriticalHitResistance = UGameplayTagsManager::Get().AddNativeGameplayTag(
 FName( "Attributes.Secondary.CriticalHitResistance")), FString(
-"Decreases the damage received from a critical hit");
+"Decreases damage taken from critical hits");
 
 	GameplayTags.Attributes_Secondary_HealthRegeneration = UGameplayTagsManager::Get().AddNativeGameplayTag(
 FName( "Attributes.Secondary.HealthRegeneration")), FString(
-	"Increases the amount of health healed per second");
+	"Health regenerated each second");
 
 	GameplayTags.Attributes_Secondary_ManaRegeneration = UGameplayTagsManager::Get().AddNativeGameplayTag(
 FName( "Attributes.Secondary.ManaRegeneration")), FString(
-"Increases the amount of mana restored per second");
+"Mana regenerated each second");
 
 	GameplayTags.Attributes_Secondary_MaxHealth = UGameplayTagsManager::Get().AddNativeGameplayTag(
 FName( "Attributes.Secondary.MaxHealth")), FString(
-"Stat that dictates the maximum health");
+"Amount of damage that can be sustained before death");
 
 	GameplayTags.Attributes_Secondary_MaxMana = UGameplayTagsManager::Get().AddNativeGameplayTag(
 FName( "Attributes.Secondary.MaxMana")), FString(
-"Stat that dictates the maximum Mana");
+"Capacity for casting spells");
 
 
 	
